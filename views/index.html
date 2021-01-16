@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>填写信息</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.
+">
+
+    <!--    <link rel="stylesheet" href="dist/lib/weui.min.css">-->
+    <link rel="stylesheet" href="dist/css/jquery-weui.css">
+    <link rel="stylesheet" href="dist/demos/css/demos.css">
+    <link rel="stylesheet" href="dist/lib/weui.css">
+</head>
+
+<body ontouchstart style="background:#efeff4">
+
+<div class="weui-cells">
+    <div class="weui-cell">
+        <div class="weui-cell__hd"><label class="weui-label">ITV账号</label></div>
+        <div class="weui-cell__bd">
+            <input class="weui-input" type="text" value="" placeholder="ITV账号" id="user-id" style=" color:#a7b94a">
+        </div>
+    </div>
+</div>
+
+<div class="weui-cells">
+    <div class="weui-cell">
+        <div class="weui-cell__hd"><label class="weui-label">用户名</label></div>
+        <div class="weui-cell__bd">
+            <input class="weui-input" type="text" value="" placeholder="用户名" id="name" style=" color:#a7b94a">
+        </div>
+    </div>
+</div>
+
+
+<div class="weui-cells">
+    <div class="weui-cell">
+        <div class="weui-cell__hd"><label class="weui-label">电话号码</label></div>
+        <div class="weui-cell__bd">
+            <input class="weui-input" type="tel" value="" placeholder="请填写电话号码" id="tel" style=" color:#a7b94a">
+        </div>
+    </div>
+</div>
+
+<div class="weui-cells">
+    <div class="weui-cell">
+        <div class="weui-cell__hd"><label class="weui-label">收货地址</label></div>
+        <div class="weui-cell__bd">
+            <textarea class="weui-textarea" placeholder="" id="address" style=" color:#a7b94a" rows="3"></textarea>
+        </div>
+    </div>
+</div>
+
+
+<div class="weui-btn-area">
+    <a class="weui-btn weui-btn_primary" href="javascript:" id="show-toast">确定</a>
+</div>
+<input type="text" id="user-id2" value="<%=id%>" style="display: none">
+<input type="text" id="serverUrl-id" value="<%=serverUrl%>" style="display: none">
+
+<script src="dist/lib/jquery-2.1.4.js"></script>
+<script src="dist/lib/fastclick.js"></script>
+<script>
+</script>
+<script src="dist/js/jquery-weui.js"></script>
+
+<script>
+    var regIdNo = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+    $(document).on("click", "#show-toast", function () {
+        if ($("#name").val() == "" || $("#user-id").val() == "" || $("#tel").val() == ""|| $("#address").val() == "") {
+            alert("信息不能为空");
+            return;
+        }
+
+        //电话验证
+        if (!isTelPhoneMatched($("#tel").val())) {
+            alert("电话号码错误");
+            return;
+        }
+
+        var userInfo = {
+            "user_id": $("#user-id").val(),
+            "user_name": $("#name").val(),
+            "address": $("#address").val(),
+            "user_tel": $("#tel").val(),
+        }
+        $.ajax({
+            type: "get",
+            dataType: "json",
+            url: $("#serverUrl-id").val(),
+            data: userInfo, //提交的数据
+            success: function (rsp) {
+                console.log(rsp.status);       //打印服务端返回的数据(调试用)
+                if (rsp.status == 1) {
+                    alert("保存成功");
+                } else if (rsp.status == 2) {
+                    alert("请勿重复添加");
+                } else {
+                    alert("保存失败");
+                }
+            },
+            error: function () {
+                alert("提交失败");
+            }
+        });
+    })
+        .on("click", "#show-toast-cancel", function () {
+            $.toast("取消操作", "cancel", function (toast) {
+                console.log(toast);
+            });
+        })
+        .on("click", "#show-toast-forbidden", function () {
+            $.toast("禁止操作", "forbidden");
+        })
+        .on("click", "#show-toast-text", function () {
+            $.toast("纯文本", "text");
+        })
+        .on("click", "#show-loading", function () {
+            $.showLoading();
+
+            setTimeout(function () {
+                $.hideLoading();
+            }, 3000)
+        });
+
+    function isTelPhoneMatched(number) {
+        if (typeof number === "undefined" || number == null || number === "") {
+            return false;
+        }
+        var TEL_REG = /^[1](([3][0-9])|([4][5-9])|([5][0-3,5-9])|([6][5,6])|([7][0-8])|([8][0-9])|([9][1,8,9]))[0-9]{8}$/;
+        return TEL_REG.test(number);
+    }
+</script>
+
+</body>
+</html>

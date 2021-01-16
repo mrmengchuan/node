@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>用户信息</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.
+">
+    <link rel="stylesheet" href="dist/lib/weui.min.css">
+    <link rel="stylesheet" href="dist/demos/css/demos.css">
+    <link rel="stylesheet" href="css/hui.css">
+    <style>
+        input[type=button], input[type=submit], input[type=date], button {
+            cursor: pointer;
+            -webkit-appearance: none;
+        }
+
+        table th {
+            text-align: center;
+            font-weight: 100
+        }
+
+        /*带水平线*/
+        .table th {
+            font-weight: bold;
+            font-size: 13px
+        }
+
+        .table td {
+            text-align: center;
+        }
+
+
+    </style>
+</head>
+<body>
+<div style=" width:100%; height:30px"></div>
+
+<table class="table table-border table-bg table-bordered" style=" width:98%; margin-left:1%">
+    <thead>
+    <tr>
+        <th>ITV账号</th>
+        <th>用户姓名</th>
+        <th>电话</th>
+        <th>地址</th>
+        <th>时间</th>
+    </tr>
+    </thead>
+    <tbody id="list">
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+
+
+</table>
+<div style=" width:100%; height:40px"></div>
+
+
+<script src="dist/lib/jquery-2.1.4.js"></script>
+<script src="dist/lib/fastclick.js"></script>
+<script>
+    var dataListStr = '<%- dataList %>';
+    var list = JSON.parse(dataListStr);
+    createData()
+
+    function createData() {
+        $("#list").html("");
+        var strHtml = '';
+        for (var i = 0; i < list.length; i++) {
+            strHtml += '<tr>';
+            strHtml += '<td>' + list[i].user_id + '</td>';
+            strHtml += '<td>' + list[i].user_name + '</td>';
+            strHtml += '<td>' + list[i].user_tel + '</td>';
+            strHtml += '<td>' + list[i].address + '</td>';
+            strHtml += '<td>' + formatTime(list[i].insert_dt) + '</td>';
+        }
+        $("#list").html(strHtml);
+    }
+
+    function formatTime(value) {
+        var time = timeFommater(value);
+        console.log(time);
+
+        function timeFommater(value) {
+            var dateee = new Date(value).toJSON();
+            var date = new Date(+new Date(dateee) + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '')
+            return date;
+        }
+
+        return time;
+    }
+
+    console.table(typeof dataListStr)
+    console.table(list)
+</script>
+
+
+</body>
+</html>
